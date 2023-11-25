@@ -5,9 +5,14 @@ import { useParams } from "react-router-dom";
 import About from "./components/about";
 import Bids from "./components/bids";
 import { useSelector } from "react-redux";
-import { calculateTimeRemaining } from "../../utils/date";
-
+import { calculateTimeRemaining, getAmountInCommas } from "../../utils/date";
+import { useDispatch } from "react-redux";
+import { getAllBidsAction } from "../../redux/bids/bid.action";
+import { io } from "socket.io-client";
 const Product = () => {
+  
+ 
+
   const [showDrawer, setShowDrawer] = useState(false);
   const [bidAmount, setBidAmount] = useState(0);
   const [product, setProduct] = useState();
@@ -15,10 +20,17 @@ const Product = () => {
   const [highestBid, setHighestBid] = useState(0);
   const [tab, setTabs] = useState("about");
   const [expireTime, setExpireTime] = useState();
+  const dispatch = useDispatch();
 
   const { id } = useParams();
+
+  const { allBids } = useSelector((store) => store.bidReducer)
+ 
   useEffect(() => {
+    
     getProduct();
+    dispatch(getAllBidsAction(id))
+
   }, []);
   useEffect(() => {
     if (product?.endDate) {
@@ -39,7 +51,7 @@ const Product = () => {
       setProduct(response.data.product);
       setOwner(response.data.owner);
       if (response.data.highestBid) {
-        setHighestBid(response.data.highestBid);
+        setHighestBid(getAmountInCommas(response.data.highestBid));
       }
     } catch (error) {
       console.log(error);
@@ -48,10 +60,12 @@ const Product = () => {
 
   return (
     <main className="mt-5 pb-[4rem]">
-      <section className="w-[80%] m-auto">
-        <div className="flex gap-10">
-          <div className="w-[70%] relative">
-            {product?.purchaseBy ? (
+      <section className="w-[90%] lg:w-[80%] m-auto">
+        <div className="flex base:flex-col   flex-col lg:flex-row gap-10">
+          <div className="lg:w-[70%] w-[100%] relative">
+            {product?.purchaseBy ? product?.purchaseBy=='Expire' ?  <p className="absolute right-0 top-3 bg-green-200 text-[1.2rem] font-bold rounded-xl px-7 py-2 text-red-500">
+                Ended
+              </p> :   (
               <p className="absolute right-0 top-3 bg-green-200 text-[1.2rem] font-bold rounded-xl px-7 py-2 text-red-500">
                 sold
               </p>
@@ -67,7 +81,7 @@ const Product = () => {
               alt=""
             />
           </div>
-          <div className="bg-[#eff1f4] rounded-3xl px-5 w-[30%] py-2">
+          <div className="bg-[#eff1f4] rounded-3xl px-5 lg:w-[30%] w-[100%]  py-2">
             <h1 className="text-[2rem] ">{product?.productName}</h1>
             <div className="my-5">
               <div className="flex justify-between border-b-[1px] border-black py-2">
@@ -75,24 +89,24 @@ const Product = () => {
                 <p>₹ {product?.startBid}</p>
               </div>
               <div className="flex justify-between border-b-[1px] border-black py-2 ">
-                <p>highestBid Bid</p>
+                <p>Highest Bid</p>
                 {highestBid ? <p>₹ {highestBid}</p> : <p>-</p>}
               </div>
               <div className="flex justify-between border-b-[1px] border-black py-2">
                 <p>Total Bids</p>
-                <p>{}</p>
+                <p>{allBids?.length}</p>
               </div>
             </div>
-            <div className="flex justify-between ">
+            <div className="flex justify-between items-center ">
               {product?.purchaseBy ? (
                 product?.purchaseBy == "Expire" ? (
                   <>
                     <p className="text-[1.2rem] text-[red]  ">Expired</p>
-                    <p> 'Auction Expired No one placed Bid' </p>
+                    <p className="text-[1rem]  "> Auction Expired No one placed Bid  </p>
                   </>
                 ) : (
                   <>
-                    <p className="text-[1.2rem] text-[red]  ">Expired</p>
+                    <p className="text-[1.2rem] text-[red]  ">Auction Ended</p>
                     <p className="text-[1.2rem]  ">
                       Sold to {product?.purchaseByName}{" "}
                     </p>
@@ -105,7 +119,8 @@ const Product = () => {
               ) : (
                 <>
                   {" "}
-                  <input
+                      <input
+                        value={bidAmount}
                     onChange={(e) => setBidAmount(e.target.value)}
                     type="text"
                     placeholder="Enter Amount"
@@ -124,7 +139,7 @@ const Product = () => {
         </div>
         {/* tabs div */}
         <div className=" mt-8 bg-[#eff1f4] rounded-3xl py-5">
-          <div className="  w-[80%] m-auto">
+          <div className="  w-[90%] lg:w-[80%] m-auto">
             <div className="flex justify-around">
               <div
                 onClick={() => setTabs("about")}
@@ -143,13 +158,13 @@ const Product = () => {
                   tab == "bids" ? "text-white" : "text-black"
                 } ${
                   tab == "bids" ? "border-[0px]" : " border-[1px]"
-                } rounded-lg px-20 py-3 cursor-pointer border-black`}
+                } rounded-lg px-20  py-3 cursor-pointer border-black`}
               >
                 {" "}
                 All Bids{" "}
               </div>
             </div>
-            <div className="mt-5 max-h-[240px] min-h-[240px]  overflow-y-scroll ">
+            <div className="mt-5 max-h-[240px] min-h-[240px]  ">
               {tab == "about" ? (
                 <About {...product} {...owner} />
               ) : (
@@ -166,6 +181,10 @@ const Product = () => {
         {...product}
         bidAmount={bidAmount}
         highestBid={highestBid}
+        setBidAmount={setBidAmount}
+        getProduct={getProduct}
+        setHighestBid={setHighestBid}
+        
       />
     </main>
   );
