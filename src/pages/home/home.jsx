@@ -49,12 +49,12 @@ const Home = () => {
   };
   return (
     <main>
-      <section id="1" className="h-[60vh] mt-4">
-        <div className="flex flex-col items-center  justify-center gap-y-4 w-[50%] m-auto   text-center">
-          <h1 className="text-[3.5rem] font-bold text-blue-600">
+      <section id="1" className="h-[40vh] md:h-[60vh] mt-4">
+        <div className="flex flex-col items-center  justify-center gap-y-4 w-[90%] md:w-[50%] m-auto   text-center">
+          <h1 className="text-[2rem] md:text-[3.5rem] font-bold text-blue-600">
             Join Exclusive Auction & Get The Finest.
           </h1>
-          <div className=" relative flex flex-col  h-[3.5rem] w-[70%] px-[1rem] rounded-xl border  py-2">
+          <div className=" relative flex flex-col  h-[3.5rem] w-[90%]  md:w-[70%] px-[1rem] rounded-xl border  py-2">
             <div className="flex h-[40px]">
               <input
                 ref={searchRef}
@@ -77,9 +77,9 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className="w-[80%] m-auto  mt-5 px-5 ">
+      <section className="w-[90%] md:w-[80%] m-auto  mt-5 px-5 ">
         <div className="text-center  ">
-          <h1 className="text-[2.5rem]  font-bold text-blue-600">
+          <h1 className="text-[2rem] md:text-[2.5rem]   font-bold text-blue-600">
             Recent Auctions
           </h1>
         </div>
