@@ -19,11 +19,3 @@ export function calculateTimeRemaining(expirationDate) {
   return daysRemaining
   // return `${daysRemaining} day${daysRemaining !== 1 ? 's' : ''}`;
 }
-
-export const getAmountInCommas = (initialAmount) => {
-  const formattedAmount = initialAmount.toLocaleString('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-  })
-  return formattedAmount
-}
