@@ -49,7 +49,7 @@ const Home = () => {
   };
   return (
     <main>
-      <section id="1" className="h-[40vh] md:h-[60vh] mt-4">
+      <section id="1" className="h-[40vh] md:h-[50vh] mt-4">
         <div className="flex flex-col items-center  justify-center gap-y-4 w-[90%] md:w-[50%] m-auto   text-center">
           <h1 className="text-[2rem] md:text-[3.5rem] font-bold text-blue-600">
             Join Exclusive Auction & Get The Finest.

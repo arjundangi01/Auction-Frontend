@@ -15,7 +15,7 @@ export const onGetAllProducts = () => async (dispatch) => {
     console.log(error);
   }
 };
-export const onAddNewProduct = (newObj,navigate) => async (dispatch) => {
+export const onAddNewProduct = (newObj,navigate,setIsSubmitLoading) => async (dispatch) => {
   const userToken = Cookies.get("auction_token");
   if (!userToken) {
     return;
@@ -32,8 +32,12 @@ export const onAddNewProduct = (newObj,navigate) => async (dispatch) => {
       }
     );
     navigate('/')
+    setIsSubmitLoading(false);
+
     // console.log(response);
   } catch (error) {
+    setIsSubmitLoading(false);
+
     console.log(error);
   }
 };
