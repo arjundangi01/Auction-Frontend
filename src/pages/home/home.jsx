@@ -15,8 +15,10 @@ const Home = () => {
   // const timerId = useRef("");
   // --`
   const { allProducts } = useSelector((store) => store.productReducer);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    dispatch(onGetAllProducts());
+    setLoading(true);
+    dispatch(onGetAllProducts(setLoading));
   }, []);
 
   const handleChange = async () => {
@@ -77,6 +79,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+     { loading && <div className="text-center text-3xl font-bold text-red-600 " >
+        <h1>Connecting to Data Base. Please Wait </h1>
+      </div>}
       <section className="w-[90%] md:w-[80%] m-auto  mt-5 px-5 ">
         <div className="text-center  ">
           <h1 className="text-[2rem] md:text-[2.5rem]   font-bold text-blue-600">
